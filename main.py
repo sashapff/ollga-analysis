@@ -98,7 +98,7 @@ def oplea(n, lam, q):
     return algorithm(n, lam, q, algo_fun)
 
 
-def thread_run(n, lam, q, algo, n_runs, thread_id):
+def thread_run(algo, n, lam, q, n_runs, thread_id):
     random.seed(thread_id)
     np.random.seed(thread_id)
 
@@ -108,9 +108,9 @@ def thread_run(n, lam, q, algo, n_runs, thread_id):
     return runtime_dist
 
 
-def run(n, lam, q, algo, n_threads, n_runs, file):
+def run(algo, n, lam, q, n_threads, n_runs, file):
     with Pool(n_threads) as p:
-        run_func = partial(thread_run, n, lam, q, algo, n_runs)
+        run_func = partial(thread_run, algo, n, lam, q, n_runs)
         runtime_dist = np.array(p.map(run_func, range(n_threads))).flatten()
 
         for n_iters in runtime_dist:
@@ -119,18 +119,18 @@ def run(n, lam, q, algo, n_threads, n_runs, file):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('n_deg', type=int)
+    parser.add_argument('--algo', type=str)
+    parser.add_argument('--n_deg', type=int)
     parser.add_argument('--lam', type=str)
     parser.add_argument('--q', type=str)
-    parser.add_argument('--algo', type=str)
     parser.add_argument('--threads', type=int)
     parser.add_argument('--runs', type=int)
     args = parser.parse_args()
 
+    algo = args.algo
     n = 2 ** args.n_deg
     lam = int(option_parse(n, args.lam))
     q = option_parse(n, args.q)
-    algo = args.algo
     n_threads = args.threads
     n_runs = args.runs
 
@@ -143,5 +143,5 @@ if __name__ == '__main__':
     if not os.path.exists(data_path):
         os.mkdir(data_path)
 
-    with open(data_path + f'{algo}::n_deg={args.n_deg}::lam={args.lam}::q={args.q}.txt', 'w') as file:
-        run(n, lam, q, algo_dict[algo], n_threads, n_runs, file)
+    with open(data_path + f'{algo}: n_deg={args.n_deg}, lam={args.lam}, q={args.q}.txt', 'w') as file:
+        run(algo_dict[algo], n, lam, q, n_threads, n_runs, file)
