@@ -4,6 +4,7 @@ import random
 import numpy as np
 from multiprocessing import Pool
 from functools import partial
+import os
 
 
 def option_parse(n, option):
@@ -67,13 +68,12 @@ def crossover(n, lam, q, x, x_mutated):
     return y_crossover, f_y_crossover
 
 
-def ollga(n, lam, q):
+def algorithm(n, lam, q, algo_fun):
     n_iters = 0
     x = random.randint(0, 2 ** n - 1)
     f_x = f_noisy(x, n, q)
     while f(x) != n and n_iters < n ** 3:
-        x_mutated, _ = mutation(n, lam, q, x)
-        y, f_y = crossover(n, lam, q, x, x_mutated)
+        y, f_y = algo_fun(n, lam, q, x)
 
         if f_x <= f_y:
             x = y
@@ -83,8 +83,19 @@ def ollga(n, lam, q):
     return n_iters
 
 
+def ollga(n, lam, q):
+    def algo_fun(n, lam, q, x):
+        x_mutated, _ = mutation(n, lam, q, x)
+        return crossover(n, lam, q, x, x_mutated)
+
+    return algorithm(n, lam, q, algo_fun)
+
+
 def oplea(n, lam, q):
-    pass
+    def algo_fun(n, lam, q, x):
+        return mutation(n, lam, q, x)
+
+    return algorithm(n, lam, q, algo_fun)
 
 
 def thread_run(n, lam, q, algo, n_runs, thread_id):
@@ -104,6 +115,7 @@ def run(n, lam, q, algo, n_threads, n_runs, file):
 
         for n_iters in runtime_dist:
             file.write(f'{n_iters}\n')
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -127,5 +139,9 @@ if __name__ == '__main__':
         'oplea': oplea
     }
 
-    with open(f'data/{algo}::n_deg={args.n_deg}::lam={args.lam}::q={args.q}.txt', 'w') as file:
+    data_path = 'data/'
+    if not os.path.exists(data_path):
+        os.mkdir(data_path)
+
+    with open(data_path + f'{algo}::n_deg={args.n_deg}::lam={args.lam}::q={args.q}.txt', 'w') as file:
         run(n, lam, q, algo_dict[algo], n_threads, n_runs, file)
