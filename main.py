@@ -13,6 +13,7 @@ def thread_run(algo, n, lam, q, n_runs, thread_id):
     runtime_dist = []
     for _ in range(n_runs):
         runtime_dist.append(algo(n, lam, q))
+
     return runtime_dist
 
 
