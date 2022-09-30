@@ -1,9 +1,11 @@
-import random
-import numpy as np
-from multiprocessing import Pool
-from functools import partial
 import os
-from tools import args_parse
+import random
+from functools import partial
+from multiprocessing import Pool
+
+import numpy as np
+
+from tools import args_parse, data_path
 
 
 def thread_run(algo, n, lam, q, n_runs, thread_id):
@@ -11,8 +13,16 @@ def thread_run(algo, n, lam, q, n_runs, thread_id):
     np.random.seed(thread_id)
 
     runtime_dist = []
+    n_failed = 0
     for _ in range(n_runs):
-        runtime_dist.append(algo(n, lam, q))
+        n_iters = algo(n, lam, q)
+        runtime_dist.append(n_iters)
+
+        if n_iters == n ** 3:
+            n_failed += 1
+
+        if n_failed >= 0.1 * n_runs:
+            break
 
     return runtime_dist
 
@@ -29,7 +39,6 @@ def run(algo, n, lam, q, n_threads, n_runs, file):
 if __name__ == '__main__':
     algo_name, algo, n_deg, n, lam_name, lam, q_name, q, n_threads, n_runs = args_parse()
 
-    data_path = 'data/'
     if not os.path.exists(data_path):
         os.mkdir(data_path)
 

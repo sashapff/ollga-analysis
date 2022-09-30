@@ -1,5 +1,6 @@
-import numpy as np
 import random
+
+import numpy as np
 
 
 def f(x):
@@ -72,7 +73,7 @@ def ollga(n, lam, q):
     return algorithm(n, lam, q, algo_fun)
 
 
-def oplea(n, lam, q):
+def lea(n, lam, q):
     def algo_fun(n, lam, q, x):
         return mutation(n, lam, q, x)
 
