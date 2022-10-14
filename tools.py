@@ -1,19 +1,21 @@
 import argparse
 import math
 
-from algorithms import ollga, lea
+from algorithms import ollga, lea, tlea
 
 data_path = 'data/'
 plots_path = 'plots/'
 
 algo_dict = {
     'ollga': ollga,
-    'lea': lea
+    'lea': lea,
+    'tlea': tlea
 }
 
 algo_tex_dict = {
     'ollga': '$(1+(\lambda, \lambda))$ GA',
-    'lea': '$(1+\lambda)$ EA'
+    'lea': '$(1+\lambda)$ EA',
+    'tlea': '$(1+2\lambda)$ EA',
 }
 
 
@@ -26,8 +28,12 @@ def option_parse(n, option):
         return math.log(n) / n
     if option == 'sqrtn':
         return math.sqrt(n)
-    if option == 'log_n_div_2':
-        return math.log(n / 2)
+    if option == 'logn_div_2':
+        return math.log(n) / 2
+    if option == '0':
+        return 0
+    if option == '1':
+        return 1
 
 
 def option_tex_parse(option):
@@ -39,8 +45,12 @@ def option_tex_parse(option):
         return '$\\frac{\log(n)}{n}$'
     if option == 'sqrtn':
         return '$\sqrt{n}$'
-    if option == 'log_n_div_2':
-        return '$\log(\\frac{n}{2})$'
+    if option == 'logn_div_2':
+        return '$\\frac{\log(n)}{2}$'
+    if option == '0':
+        return '0'
+    if option == '1':
+        return '1'
 
 
 def args_parse():
@@ -70,17 +80,19 @@ def args_parse():
 
 def plots_args_parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--algo_1', type=str)
-    parser.add_argument('--algo_2', type=str)
-    parser.add_argument('--n_deg_from', type=int)
-    parser.add_argument('--n_deg_to', type=int)
+    parser.add_argument('--algo_1', type=str, default='ollga')
+    parser.add_argument('--algo_2', type=str, default='lea')
+    parser.add_argument('--algo_3', type=str, default='tlea')
+    parser.add_argument('--n_deg_from', type=int, default=5)
+    parser.add_argument('--n_deg_to', type=int, default=15)
     parser.add_argument('--lam', type=str)
     parser.add_argument('--q', type=str)
-    parser.add_argument('--y_scale', type=str, default='linear')
+    parser.add_argument('--y_scale', type=str, default='log')
     args = parser.parse_args()
 
     algo_name_1 = args.algo_1
     algo_name_2 = args.algo_2
+    algo_name_3 = args.algo_3
     n_deg_from = args.n_deg_from
     n_deg_to = args.n_deg_to
     lam_name = args.lam
@@ -92,5 +104,7 @@ def plots_args_parse():
 
     algo_tex_1 = algo_tex_dict[algo_name_1]
     algo_tex_2 = algo_tex_dict[algo_name_2]
+    algo_tex_3 = algo_tex_dict[algo_name_3]
 
-    return algo_name_1, algo_tex_1, algo_name_2, algo_tex_2, n_deg_from, n_deg_to, lam_name, lam_tex, q_name, q_tex, y_scale
+    return algo_name_1, algo_tex_1, algo_name_2, algo_tex_2, algo_name_3, algo_tex_3, n_deg_from, n_deg_to, lam_name, \
+           lam_tex, q_name, q_tex, y_scale

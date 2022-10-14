@@ -1,5 +1,4 @@
 import os
-import random
 from functools import partial
 from multiprocessing import Pool
 
@@ -9,7 +8,6 @@ from tools import args_parse, data_path
 
 
 def thread_run(algo, n, lam, q, n_runs, thread_id):
-    random.seed(thread_id)
     np.random.seed(thread_id)
 
     runtime_dist = []
@@ -23,17 +21,17 @@ def thread_run(algo, n, lam, q, n_runs, thread_id):
 
         if n_failed >= 0.1 * n_runs:
             break
-
     return runtime_dist
 
 
 def run(algo, n, lam, q, n_threads, n_runs, file):
     with Pool(n_threads) as p:
         run_func = partial(thread_run, algo, n, lam, q, n_runs)
-        runtime_dist = np.array(p.map(run_func, range(n_threads))).flatten()
+        runtime_dist = p.map(run_func, range(n_threads))
 
-        for n_iters in runtime_dist:
-            file.write(f'{n_iters}\n')
+        for dist in runtime_dist:
+            for n_iters in dist:
+                file.write(f'{n_iters}\n')
 
 
 if __name__ == '__main__':
