@@ -59,8 +59,8 @@ def args_parse():
     parser.add_argument('--n_deg', type=int)
     parser.add_argument('--lam', type=str)
     parser.add_argument('--q', type=str)
-    parser.add_argument('--threads', type=int)
-    parser.add_argument('--runs', type=int)
+    parser.add_argument('--threads', type=int, default=10)
+    parser.add_argument('--runs', type=int, default=10)
     args = parser.parse_args()
 
     algo_name = args.algo
