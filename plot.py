@@ -3,10 +3,10 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-from tools import plots_args_parse, data_path, plots_path
+from tools import plots_args_parse
 
 
-def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, label, color):
+def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, label, data_path, color):
     keys = []
     values = []
 
@@ -26,7 +26,7 @@ def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, label, color):
 
 if __name__ == '__main__':
     algo_name_1, algo_tex_1, algo_name_2, algo_tex_2, algo_name_3, algo_tex_3, n_deg_from, n_deg_to, lam_name, \
-    lam_tex, q_name, q_tex, y_scale \
+    lam_tex, q_name, q_tex, y_scale, data_path, plots_path \
         = plots_args_parse()
 
     if not os.path.exists(plots_path):
@@ -34,9 +34,9 @@ if __name__ == '__main__':
 
     plt.title(f'$\lambda$={lam_tex}, q={q_tex}')
 
-    plot(algo_name_1, n_deg_from, n_deg_to, lam_name, q_name, algo_tex_1, 'black')
-    plot(algo_name_2, n_deg_from, n_deg_to, lam_name, q_name, algo_tex_2, 'tab:red')
-    plot(algo_name_3, n_deg_from, n_deg_to, lam_name, q_name, algo_tex_3, 'darkblue')
+    plot(algo_name_1, n_deg_from, n_deg_to, lam_name, q_name, algo_tex_1, data_path, 'black')
+    plot(algo_name_2, n_deg_from, n_deg_to, lam_name, q_name, algo_tex_2, data_path, 'tab:red')
+    plot(algo_name_3, n_deg_from, n_deg_to, lam_name, q_name, algo_tex_3, data_path, 'darkblue')
 
     plt.legend()
     plt.xlabel('n, size of individuals')

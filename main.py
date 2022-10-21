@@ -4,10 +4,10 @@ from multiprocessing import Pool
 
 import numpy as np
 
-from tools import args_parse, data_path
+from tools import args_parse
 
 
-def thread_run(algo, n, lam, q, n_runs, thread_id):
+def run_algorithm(algo, n, lam, q, n_runs, thread_id):
     np.random.seed(thread_id)
 
     runtime_dist = []
@@ -26,7 +26,7 @@ def thread_run(algo, n, lam, q, n_runs, thread_id):
 
 def run(algo, n, lam, q, n_threads, n_runs, file):
     with Pool(n_threads) as p:
-        run_func = partial(thread_run, algo, n, lam, q, n_runs)
+        run_func = partial(run_algorithm, algo, n, lam, q, n_runs)
         runtime_dist = p.map(run_func, range(n_threads))
 
         for dist in runtime_dist:
@@ -35,7 +35,7 @@ def run(algo, n, lam, q, n_threads, n_runs, file):
 
 
 if __name__ == '__main__':
-    algo_name, algo, n_deg, n, lam_name, lam, q_name, q, n_threads, n_runs = args_parse()
+    algo_name, algo, n_deg, n, lam_name, lam, q_name, q, n_threads, n_runs, data_path, plots_data = args_parse()
 
     if not os.path.exists(data_path):
         os.mkdir(data_path)

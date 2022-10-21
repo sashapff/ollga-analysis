@@ -3,9 +3,6 @@ import math
 
 from algorithms import ollga, lea, tlea
 
-data_path = 'data/'
-plots_path = 'plots/'
-
 algo_dict = {
     'ollga': ollga,
     'lea': lea,
@@ -30,10 +27,10 @@ def option_parse(n, option):
         return math.sqrt(n)
     if option == 'logn_div_2':
         return math.log(n) / 2
-    if option == '0':
-        return 0
-    if option == '1':
-        return 1
+    try:
+        return int(option)
+    except:
+        print('no!')
 
 
 def option_tex_parse(option):
@@ -47,10 +44,7 @@ def option_tex_parse(option):
         return '$\sqrt{n}$'
     if option == 'logn_div_2':
         return '$\\frac{\log(n)}{2}$'
-    if option == '0':
-        return '0'
-    if option == '1':
-        return '1'
+    return option
 
 
 def args_parse():
@@ -61,6 +55,8 @@ def args_parse():
     parser.add_argument('--q', type=str)
     parser.add_argument('--threads', type=int, default=10)
     parser.add_argument('--runs', type=int, default=10)
+    parser.add_argument('--data_path', type=str, default='data')
+    parser.add_argument('--plots_path', type=str, default='plots')
     args = parser.parse_args()
 
     algo_name = args.algo
@@ -68,6 +64,8 @@ def args_parse():
     n_runs = args.runs
     lam_name = args.lam
     q_name = args.q
+    data_path = args.data_path + '/'
+    plots_path = args.plots_path + '/'
 
     n = 1 << args.n_deg
     lam = int(option_parse(n, args.lam))
@@ -75,7 +73,7 @@ def args_parse():
 
     algo = algo_dict[algo_name]
 
-    return algo_name, algo, args.n_deg, n, lam_name, lam, q_name, q, n_threads, n_runs
+    return algo_name, algo, args.n_deg, n, lam_name, lam, q_name, q, n_threads, n_runs, data_path, plots_path
 
 
 def plots_args_parse():
@@ -88,6 +86,8 @@ def plots_args_parse():
     parser.add_argument('--lam', type=str)
     parser.add_argument('--q', type=str)
     parser.add_argument('--y_scale', type=str, default='log')
+    parser.add_argument('--data_path', type=str, default='data')
+    parser.add_argument('--plots_path', type=str, default='plots')
     args = parser.parse_args()
 
     algo_name_1 = args.algo_1
@@ -98,6 +98,8 @@ def plots_args_parse():
     lam_name = args.lam
     q_name = args.q
     y_scale = args.y_scale
+    data_path = args.data_path + '/'
+    plots_path = args.plots_path + '/'
 
     lam_tex = option_tex_parse(args.lam)
     q_tex = option_tex_parse(args.q)
@@ -107,4 +109,30 @@ def plots_args_parse():
     algo_tex_3 = algo_tex_dict[algo_name_3]
 
     return algo_name_1, algo_tex_1, algo_name_2, algo_tex_2, algo_name_3, algo_tex_3, n_deg_from, n_deg_to, lam_name, \
-           lam_tex, q_name, q_tex, y_scale
+           lam_tex, q_name, q_tex, y_scale, data_path, plots_path
+
+
+def optimal_lambda_plots_args_parse():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--algo', type=str, default='ollga')
+    parser.add_argument('--lam_from', type=int, default=1)
+    parser.add_argument('--lam_to', type=int, default=10)
+    parser.add_argument('--q', type=str)
+    parser.add_argument('--n_deg', type=int, default=7)
+    parser.add_argument('--data_path', type=str, default='lambda_data')
+    parser.add_argument('--plots_path', type=str, default='lambda_plots')
+    args = parser.parse_args()
+
+    algo_name = args.algo
+    lam_from = args.lam_from
+    lam_to = args.lam_to
+    q_name = args.q
+    n_deg = args.n_deg
+    data_path = args.data_path + '/'
+    plots_path = args.plots_path + '/'
+
+    q_tex = option_tex_parse(args.q)
+
+    algo_tex = algo_tex_dict[algo_name]
+
+    return algo_name, algo_tex, lam_from, lam_to, q_name, q_tex, n_deg, data_path, plots_path

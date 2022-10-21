@@ -1,5 +1,4 @@
 import numpy as np
-from numpy import random as np_random
 
 
 def f_noisy(x, n, q):
