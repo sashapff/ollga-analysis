@@ -21,6 +21,7 @@ def plot(algo_name, lam_from, lam_to, q_name, data_path, n_deg, color):
             plt.errorbar(lam, n_iters, yerr=data.std(), color=color, capsize=3)
 
     plt.plot(keys, values, color=color)
+    plt.xticks(range(lam_from, lam_to + 1))
 
 
 if __name__ == '__main__':
@@ -37,6 +38,6 @@ if __name__ == '__main__':
     plt.xlabel('lambda')
     plt.ylabel('number of noisy fitness evaluations')
     plt.yscale('log')
-    plt.xlim((lam_from - 3, lam_to + 3))
+    plt.xlim((lam_from - 1, lam_to + 1))
 
     plt.savefig(plots_path + f'{algo_name}: n_deg={n_deg}, q={q_name}.png')

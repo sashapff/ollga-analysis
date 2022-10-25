@@ -6,4 +6,4 @@
 #SBATCH --output="slurm_output/"%A.out
 #SBATCH --qos=high_cpu
 
-python3 main.py --algo tlea --n_deg 10 --lam 4 --q 0 --data_path lambda_data
+python3 main.py --algo ollga --n_deg 7 --lam 10 --q 0 --data_path lambda_data

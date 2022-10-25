@@ -2,6 +2,8 @@ import numpy as np
 
 
 def f_noisy(x, n, q):
+    if q == 0:
+        assert np.random.binomial(x, 1 - q / n) + np.random.binomial(n - x, q / n) == x
     return np.random.binomial(x, 1 - q / n) + np.random.binomial(n - x, q / n)
 
 
