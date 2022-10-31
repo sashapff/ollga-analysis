@@ -2,13 +2,36 @@ import numpy as np
 
 
 def f_noisy(x, n, q):
+    f_x_noisy = np.random.binomial(x, 1 - q / n) + np.random.binomial(n - x, q / n)
     if q == 0:
-        assert np.random.binomial(x, 1 - q / n) + np.random.binomial(n - x, q / n) == x
-    return np.random.binomial(x, 1 - q / n) + np.random.binomial(n - x, q / n)
+        assert f_x_noisy == x
+    return f_x_noisy
 
 
-def mutation(n, lam, q, x, mut_prob):
-    l = np.random.binomial(n, mut_prob)
+def lea_mutation(n, lam, q, x):
+    x_mutated_best = 0
+    fx_mutated_best_noisy = -n
+    fitness_evaluations = 0
+
+    for _ in range(lam):
+        m_1 = np.random.binomial(x, 1 / n)
+        m_0 = np.random.binomial(n - x, 1 / n)
+        assert 0 <= m_0 <= n - x
+        assert 0 <= m_1 <= x
+        y = x - m_1 + m_0
+        assert 0 <= y <= n
+        fy_noisy = f_noisy(y, n, q)
+        fitness_evaluations += 1
+
+        if fy_noisy > fx_mutated_best_noisy:
+            x_mutated_best = y
+            fx_mutated_best_noisy = fy_noisy
+
+    return x_mutated_best, fx_mutated_best_noisy, fitness_evaluations
+
+
+def ollga_mutation(n, lam, q, x):
+    l = np.random.binomial(n, lam / n)
     x_mutated_best = 0
     fx_mutated_best_noisy = -n
     m_0_best, m_1_best = 0, 0
@@ -32,7 +55,7 @@ def mutation(n, lam, q, x, mut_prob):
             fx_mutated_best_noisy = fy_noisy
             m_0_best, m_1_best = m_0, m_1
 
-    return x_mutated_best, fx_mutated_best_noisy, m_0_best, m_1_best, fitness_evaluations
+    return m_0_best, m_1_best, fitness_evaluations
 
 
 def crossover(n, lam, q, x, m_0, m_1):
@@ -75,7 +98,7 @@ def algorithm(n, lam, q, algo_fun, fitness_evaluations):
 
 def ollga(n, lam, q):
     def algo_fun(n, lam, q, x):
-        _, _, m_0, m_1, fitness_evaluations_1 = mutation(n, lam, q, x, lam / n)
+        m_0, m_1, fitness_evaluations_1 = ollga_mutation(n, lam, q, x)
         y, fy_noisy, fitness_evaluations_2 = crossover(n, lam, q, x, m_0, m_1)
         return y, fy_noisy, fitness_evaluations_1 + fitness_evaluations_2
 
@@ -84,7 +107,7 @@ def ollga(n, lam, q):
 
 def lea(n, lam, q):
     def algo_fun(n, lam, q, x):
-        x_mutated, fx_noisy, _, _, fitness_evaluations = mutation(n, lam, q, x, 1 / n)
+        x_mutated, fx_noisy, fitness_evaluations = lea_mutation(n, lam, q, x)
         return x_mutated, fx_noisy, fitness_evaluations
 
     return algorithm(n, lam, q, algo_fun, lam + 1)
@@ -92,7 +115,7 @@ def lea(n, lam, q):
 
 def tlea(n, lam, q):
     def algo_fun(n, lam, q, x):
-        x_mutated, fx_noisy, _, _, fitness_evaluations = mutation(n, lam, q, x, 1 / n)
+        x_mutated, fx_noisy, fitness_evaluations = lea_mutation(n, lam, q, x)
         return x_mutated, fx_noisy, fitness_evaluations
 
     return algorithm(n, 2 * lam, q, algo_fun, 2 * lam + 1)
