@@ -1,12 +1,22 @@
 import argparse
 import math
 
-from algorithms import ollga, lea, tlea
+from algorithms import ollga, lea, tlea, onemax, jump
 
 algo_dict = {
     'ollga': ollga,
     'lea': lea,
     'tlea': tlea
+}
+
+fitness_dict = {
+    'onemax': onemax,
+    'jump': jump,
+}
+
+fitness_name_dict = {
+    'onemax': 'OneMax',
+    'jump': 'Jump',
 }
 
 algo_tex_dict = {
@@ -16,7 +26,7 @@ algo_tex_dict = {
 }
 
 
-def option_parse(n, option):
+def option_parse(n, lam, option):
     if option == 'logn':
         return math.log(n)
     if option == '1_div_6e':
@@ -27,6 +37,18 @@ def option_parse(n, option):
         return math.sqrt(n)
     if option == 'logn_div_2':
         return math.log(n) / 2
+    if option == '1_div_n':
+        return 1 / n
+    if option == 'lambda_div_n':
+        return lam / n
+    if option == '1_div_lambda':
+        return 1 / lam
+    if option == 'sqrt_2_div_n':
+        return math.sqrt(2 / n)
+    if option == 'sqrtn_div_2':
+        return math.sqrt(n) / 2
+    if not option:
+        return None
     try:
         return int(option)
     except:
@@ -44,6 +66,16 @@ def option_tex_parse(option):
         return '$\sqrt{n}$'
     if option == 'logn_div_2':
         return '$\\frac{\log(n)}{2}$'
+    if option == '1_div_n':
+        return '$\\frac{1}{n}$'
+    if option == 'lambda_div_n':
+        return '$\\frac{\lambda}{n}$'
+    if option == '1_div_lambda':
+        return '$\\frac{1}{\lambda}$'
+    if option == 'sqrt_2_div_n':
+        return '$\sqrt{\\frac{2}{n}}$'
+    if option == 'sqrtn_div_2':
+        return '$\\frac{\sqrt{n}}{2}$'
     return option
 
 
@@ -53,6 +85,10 @@ def args_parse():
     parser.add_argument('--n_deg', type=int)
     parser.add_argument('--lam', type=str)
     parser.add_argument('--q', type=str)
+    parser.add_argument('--fitness', type=str, default='onemax')
+    parser.add_argument('--k', type=int, default=2)
+    parser.add_argument('--p', type=str, default=None)
+    parser.add_argument('--c', type=str, default=None)
     parser.add_argument('--threads', type=int, default=10)
     parser.add_argument('--runs', type=int, default=10)
     parser.add_argument('--data_path', type=str, default='data')
@@ -64,16 +100,23 @@ def args_parse():
     n_runs = args.runs
     lam_name = args.lam
     q_name = args.q
-    data_path = args.data_path + '/'
+    fitness = args.fitness
+    k = args.k
+    fitness_name = fitness_name_dict[fitness]
+    data_path = args.data_path + '/' + fitness_name.lower() + '/'
     plots_path = args.plots_path + '/'
 
     n = 1 << args.n_deg
-    lam = int(option_parse(n, args.lam))
-    q = option_parse(n, args.q)
+    lam = int(option_parse(n, 0, args.lam))
+    q = option_parse(n, lam, args.q)
+    p = option_parse(n, lam, args.p)
+    c = option_parse(n, lam, args.c)
 
     algo = algo_dict[algo_name]
+    f = fitness_dict[fitness]
 
-    return algo_name, algo, args.n_deg, n, lam_name, lam, q_name, q, n_threads, n_runs, data_path, plots_path
+    return algo_name, algo, args.n_deg, n, lam_name, lam, q_name, q, f, fitness_name, k, p, c, n_threads, n_runs, \
+           data_path, plots_path
 
 
 def plots_args_parse():
@@ -81,11 +124,14 @@ def plots_args_parse():
     parser.add_argument('--algo_1', type=str, default='ollga')
     parser.add_argument('--algo_2', type=str, default='lea')
     parser.add_argument('--algo_3', type=str, default='tlea')
-    parser.add_argument('--n_deg_from', type=int, default=5)
-    parser.add_argument('--n_deg_to', type=int, default=15)
-    parser.add_argument('--lam', type=str)
+    parser.add_argument('--n_deg_from', type=int, default=3)
+    parser.add_argument('--n_deg_to', type=int, default=7)
+    parser.add_argument('--lam', type=str, default=None)
+    parser.add_argument('--lam1', type=str, default=None)
+    parser.add_argument('--lam2', type=str, default=None)
+    parser.add_argument('--lam3', type=str, default=None)
     parser.add_argument('--q', type=str)
-    parser.add_argument('--y_scale', type=str, default='log')
+    parser.add_argument('--fitness', type=str, default='onemax')
     parser.add_argument('--data_path', type=str, default='data')
     parser.add_argument('--plots_path', type=str, default='plots')
     args = parser.parse_args()
@@ -95,44 +141,28 @@ def plots_args_parse():
     algo_name_3 = args.algo_3
     n_deg_from = args.n_deg_from
     n_deg_to = args.n_deg_to
-    lam_name = args.lam
+    if args.lam:
+        lam_name_1 = lam_name_2 = lam_name_3 = args.lam
+        lam_tex_1 = lam_tex_2 = lam_tex_3 = option_tex_parse(args.lam)
+    elif args.lam1 and args.lam2 and args.lam3:
+        lam_name_1 = args.lam1
+        lam_name_2 = args.lam2
+        lam_name_3 = args.lam3
+        lam_tex_1 = option_tex_parse(args.lam1)
+        lam_tex_2 = option_tex_parse(args.lam2)
+        lam_tex_3 = option_tex_parse(args.lam3)
+    else:
+        raise RuntimeError('Specify lambdas!')
     q_name = args.q
-    y_scale = args.y_scale
-    data_path = args.data_path + '/'
-    plots_path = args.plots_path + '/'
+    fitness_name = fitness_name_dict[args.fitness]
+    data_path = args.data_path + '/' + fitness_name.lower() + '/'
+    plots_path = args.plots_path + '/' + fitness_name.lower() + '/'
 
-    lam_tex = option_tex_parse(args.lam)
     q_tex = option_tex_parse(args.q)
 
     algo_tex_1 = algo_tex_dict[algo_name_1]
     algo_tex_2 = algo_tex_dict[algo_name_2]
     algo_tex_3 = algo_tex_dict[algo_name_3]
 
-    return algo_name_1, algo_tex_1, algo_name_2, algo_tex_2, algo_name_3, algo_tex_3, n_deg_from, n_deg_to, lam_name, \
-           lam_tex, q_name, q_tex, y_scale, data_path, plots_path
-
-
-def optimal_lambda_plots_args_parse():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--algo', type=str, default='ollga')
-    parser.add_argument('--lam_from', type=int, default=1)
-    parser.add_argument('--lam_to', type=int, default=15)
-    parser.add_argument('--q', type=str)
-    parser.add_argument('--n_deg', type=int, default=10)
-    parser.add_argument('--data_path', type=str, default='lambda_data')
-    parser.add_argument('--plots_path', type=str, default='lambda_plots')
-    args = parser.parse_args()
-
-    algo_name = args.algo
-    lam_from = args.lam_from
-    lam_to = args.lam_to
-    q_name = args.q
-    n_deg = args.n_deg
-    data_path = args.data_path + '/'
-    plots_path = args.plots_path + '/'
-
-    q_tex = option_tex_parse(args.q)
-
-    algo_tex = algo_tex_dict[algo_name]
-
-    return algo_name, algo_tex, lam_from, lam_to, q_name, q_tex, n_deg, data_path, plots_path
+    return algo_name_1, algo_tex_1, algo_name_2, algo_tex_2, algo_name_3, algo_tex_3, n_deg_from, n_deg_to, \
+           lam_name_1, lam_tex_1, lam_name_2, lam_tex_2, lam_name_3, lam_tex_3, q_name, q_tex, fitness_name, data_path, plots_path
