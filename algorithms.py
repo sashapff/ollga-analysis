@@ -1,6 +1,10 @@
 import numpy as np
 
 
+def stop_criterion(n):
+    return n ** 4
+
+
 def onemax(x, n, q, _):
     f_x_noisy = np.random.binomial(x, 1 - q / n) + np.random.binomial(n - x, q / n)
     if q == 0:
@@ -21,7 +25,7 @@ def lea_mutation(n, lam, q, f, k, p, x):
         p = 1 / n
     assert 0 <= p <= 1
     x_mutated_best = 0
-    fx_mutated_best_noisy = -n
+    fx_mutated_best_noisy = -1e9 * n
     fitness_evaluations = 0
 
     for _ in range(lam):
@@ -47,7 +51,7 @@ def ollga_mutation(n, lam, q, f, k, p, x):
     assert 0 <= p <= 1
     l = np.random.binomial(n, p)
     x_mutated_best = 0
-    fx_mutated_best_noisy = -n
+    fx_mutated_best_noisy = -1e9 * n
     m_0_best, m_1_best = 0, 0
     fitness_evaluations = 0
 
@@ -77,7 +81,7 @@ def crossover(n, lam, q, f, k, c, x, m_0, m_1):
         c = 1 / lam
     assert 0 <= c <= 1
     y_crossover_best = 0
-    fy_crossover_best_noisy = -n
+    fy_crossover_best_noisy = -1e9 * n
     fitness_evaluations = 0
 
     for _ in range(lam):
@@ -97,7 +101,7 @@ def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations):
     n_iters = 0
     x = np.random.binomial(n, 1 / 2)
     assert 0 <= x <= n
-    n_iters_max = n ** 3
+    n_iters_max = stop_criterion(n)
 
     while x != n and n_iters < n_iters_max:
         y, fy_noisy, fitness_evaluations_actual = algo_fun(n, lam, q, f, k, p, c, x)
@@ -110,7 +114,7 @@ def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations):
         n_iters += 1
         assert fitness_evaluations == fitness_evaluations_actual
 
-    return n_iters * fitness_evaluations
+    return n_iters, fitness_evaluations
 
 
 def ollga(n, lam, q, f, k, p, c):

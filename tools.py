@@ -86,7 +86,7 @@ def args_parse():
     parser.add_argument('--lam', type=str)
     parser.add_argument('--q', type=str)
     parser.add_argument('--fitness', type=str, default='onemax')
-    parser.add_argument('--k', type=int, default=2)
+    parser.add_argument('--k', type=int, default=None)
     parser.add_argument('--p', type=str, default=None)
     parser.add_argument('--c', type=str, default=None)
     parser.add_argument('--threads', type=int, default=10)
@@ -103,7 +103,7 @@ def args_parse():
     fitness = args.fitness
     k = args.k
     fitness_name = fitness_name_dict[fitness]
-    data_path = args.data_path + '/' + fitness_name.lower() + '/'
+    data_path = args.data_path + '/' + fitness_name.lower() + '/' + ('k=' + str(k) + '/' if k else '')
     plots_path = args.plots_path + '/'
 
     n = 1 << args.n_deg
@@ -131,6 +131,7 @@ def plots_args_parse():
     parser.add_argument('--lam2', type=str, default=None)
     parser.add_argument('--lam3', type=str, default=None)
     parser.add_argument('--q', type=str)
+    parser.add_argument('--k', type=str, default=None)
     parser.add_argument('--fitness', type=str, default='onemax')
     parser.add_argument('--data_path', type=str, default='data')
     parser.add_argument('--plots_path', type=str, default='plots')
@@ -154,9 +155,10 @@ def plots_args_parse():
     else:
         raise RuntimeError('Specify lambdas!')
     q_name = args.q
+    k = args.k
     fitness_name = fitness_name_dict[args.fitness]
-    data_path = args.data_path + '/' + fitness_name.lower() + '/'
-    plots_path = args.plots_path + '/' + fitness_name.lower() + '/'
+    data_path = args.data_path + '/' + fitness_name.lower() + '/' + ('k=' + str(k) + '/' if k else '')
+    plots_path = args.plots_path + '/' + fitness_name.lower() + '/' + ('k=' + str(k) + '/' if k else '')
 
     q_tex = option_tex_parse(args.q)
 
@@ -165,4 +167,5 @@ def plots_args_parse():
     algo_tex_3 = algo_tex_dict[algo_name_3]
 
     return algo_name_1, algo_tex_1, algo_name_2, algo_tex_2, algo_name_3, algo_tex_3, n_deg_from, n_deg_to, \
-           lam_name_1, lam_tex_1, lam_name_2, lam_tex_2, lam_name_3, lam_tex_3, q_name, q_tex, fitness_name, data_path, plots_path
+           lam_name_1, lam_tex_1, lam_name_2, lam_tex_2, lam_name_3, lam_tex_3, q_name, q_tex, fitness_name, data_path, \
+           plots_path, k
