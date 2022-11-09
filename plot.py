@@ -7,7 +7,7 @@ from tools import plots_args_parse, option_parse
 from main import stop_criterion
 
 
-def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, label, data_path, lam_tex, is_same, color):
+def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, label, data_path, lam_tex, is_same, k, color):
     if not is_same:
         label += ', $\lambda$=' + lam_tex
     keys = []
@@ -18,7 +18,7 @@ def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, label, data_path, la
         if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
             data = np.loadtxt(file_name)
             n = 1 << n_deg
-            lam = option_parse(n, 0, lam_name)
+            lam = option_parse(n, lam_name, k=k)
             if algo_name == 'lea':
                 assert len(data[data >= stop_criterion(n) * (lam + 1)]) == 0
             else:
@@ -48,9 +48,9 @@ if __name__ == '__main__':
     else:
         plt.title(f'{fitness_name} function, k={k}, q={q_tex}')
 
-    plot(algo_name_1, n_deg_from, n_deg_to, lam_name_1, q_name, algo_tex_1, data_path, lam_tex_1, is_same, 'black')
-    plot(algo_name_2, n_deg_from, n_deg_to, lam_name_2, q_name, algo_tex_2, data_path, lam_tex_2, is_same, 'tab:red')
-    plot(algo_name_3, n_deg_from, n_deg_to, lam_name_3, q_name, algo_tex_3, data_path, lam_tex_3, is_same, 'darkblue')
+    plot(algo_name_1, n_deg_from, n_deg_to, lam_name_1, q_name, algo_tex_1, data_path, lam_tex_1, is_same, k, 'black')
+    plot(algo_name_2, n_deg_from, n_deg_to, lam_name_2, q_name, algo_tex_2, data_path, lam_tex_2, is_same, k, 'tab:red')
+    plot(algo_name_3, n_deg_from, n_deg_to, lam_name_3, q_name, algo_tex_3, data_path, lam_tex_3, is_same, k, 'darkblue')
 
     plt.legend()
     plt.xlabel('n, size of individuals')

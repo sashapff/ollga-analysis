@@ -26,7 +26,7 @@ algo_tex_dict = {
 }
 
 
-def option_parse(n, lam, option):
+def option_parse(n, option, lam=None, k=None):
     if option == 'logn':
         return math.log(n)
     if option == '1_div_6e':
@@ -43,10 +43,15 @@ def option_parse(n, lam, option):
         return lam / n
     if option == '1_div_lambda':
         return 1 / lam
-    if option == 'sqrt_2_div_n':
-        return math.sqrt(2 / n)
     if option == 'sqrtn_div_2':
         return math.sqrt(n) / 2
+    if option == 'sqrt_k_div_n':
+        return math.sqrt(k / n)
+    if option == 'sqrtn_pow_k_minus_1_div_sqrt_k_pow_k':
+        assert k
+        if k == 2:
+            assert abs(math.sqrt(n) / 2 - math.sqrt(n) ** (k - 1) / math.sqrt(k) ** k) < 1e-8
+        return math.sqrt(n) ** (k - 1) / math.sqrt(k) ** k
     if not option:
         return None
     try:
@@ -76,6 +81,8 @@ def option_tex_parse(option):
         return '$\sqrt{\\frac{2}{n}}$'
     if option == 'sqrtn_div_2':
         return '$\\frac{\sqrt{n}}{2}$'
+    if option == 'sqrtn_pow_k_minus_1_div_sqrt_k_pow_k':
+        return '$\\frac{\sqrt{n}^{k-1}}{\sqrt{k}^k}$'
     return option
 
 
@@ -107,10 +114,10 @@ def args_parse():
     plots_path = args.plots_path + '/'
 
     n = 1 << args.n_deg
-    lam = int(option_parse(n, 0, args.lam))
-    q = option_parse(n, lam, args.q)
-    p = option_parse(n, lam, args.p)
-    c = option_parse(n, lam, args.c)
+    lam = int(option_parse(n, args.lam, k=k))
+    q = option_parse(n, args.q, lam=lam)
+    p = option_parse(n, args.p, lam=lam, k=k)
+    c = option_parse(n, args.c, lam=lam, k=k)
 
     algo = algo_dict[algo_name]
     f = fitness_dict[fitness]
@@ -131,7 +138,7 @@ def plots_args_parse():
     parser.add_argument('--lam2', type=str, default=None)
     parser.add_argument('--lam3', type=str, default=None)
     parser.add_argument('--q', type=str)
-    parser.add_argument('--k', type=str, default=None)
+    parser.add_argument('--k', type=int, default=None)
     parser.add_argument('--fitness', type=str, default='onemax')
     parser.add_argument('--data_path', type=str, default='data')
     parser.add_argument('--plots_path', type=str, default='plots')
