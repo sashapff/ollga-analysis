@@ -5,6 +5,10 @@ def stop_criterion(n):
     return n ** 4
 
 
+def is_quick(f):
+    return f == onemax or f == jump
+
+
 def onemax(x, n, q, _):
     f_x_noisy = np.random.binomial(x, 1 - q / n) + np.random.binomial(n - x, q / n)
     if q == 0:
@@ -20,7 +24,18 @@ def jump(x, n, q, k):
         return f_x_noisy
 
 
-def lea_mutation(n, lam, q, f, k, p, x):
+def leading_ones(x, n, q, k):
+    fx = 0
+    for i in x:
+        if np.random.uniform() < q / n:
+            i ^= 1
+        fx += i
+        if i == 0:
+            break
+    return fx
+
+
+def quick_lea_mutation(n, lam, q, f, k, p, x):
     if not p:
         p = 1 / n
     assert 0 <= p <= 1
@@ -29,12 +44,18 @@ def lea_mutation(n, lam, q, f, k, p, x):
     fitness_evaluations = 0
 
     for _ in range(lam):
-        m_1 = np.random.binomial(x, p)
-        m_0 = np.random.binomial(n - x, p)
-        assert 0 <= m_0 <= n - x
-        assert 0 <= m_1 <= x
-        y = x - m_1 + m_0
-        assert 0 <= y <= n
+        if is_quick(f):
+            m_1 = np.random.binomial(x, p)
+            m_0 = np.random.binomial(n - x, p)
+            assert 0 <= m_0 <= n - x
+            assert 0 <= m_1 <= x
+            y = x - m_1 + m_0
+            assert 0 <= y <= n
+        else:
+            y = x.copy()
+            for i in range(n):
+                if np.random.uniform() < p:
+                    y[i] ^= 1
         fy_noisy = f(y, n, q, k)
         fitness_evaluations += 1
 
@@ -45,7 +66,7 @@ def lea_mutation(n, lam, q, f, k, p, x):
     return x_mutated_best, fx_mutated_best_noisy, fitness_evaluations
 
 
-def ollga_mutation(n, lam, q, f, k, p, x):
+def quick_ollga_mutation(n, lam, q, f, k, p, x):
     if not p:
         p = lam / n
     assert 0 <= p <= 1
@@ -56,15 +77,22 @@ def ollga_mutation(n, lam, q, f, k, p, x):
     fitness_evaluations = 0
 
     for _ in range(lam):
-        if l > 0:
-            m_1 = np.random.hypergeometric(x, n - x, l)
-            m_0 = l - m_1
-            assert 0 <= m_0 <= l and m_0 <= n - x
-            assert 0 <= m_1 <= l and m_1 <= x
+        m_0, m_1 = 0, 0
+        if is_quick(f):
+            if l > 0:
+                m_1 = np.random.hypergeometric(x, n - x, l)
+                m_0 = l - m_1
+                assert 0 <= m_0 <= l and m_0 <= n - x
+                assert 0 <= m_1 <= l and m_1 <= x
+            else:
+                m_0, m_1 = 0, 0
+            y = x - m_1 + m_0
+            assert 0 <= y <= n
         else:
-            m_0, m_1 = 0, 0
-        y = x - m_1 + m_0
-        assert 0 <= y <= n
+            y = x.copy()
+            for i in range(n):
+                if np.random.uniform() < p:
+                    y[i] ^= 1
         fy_noisy = f(y, n, q, k)
         fitness_evaluations += 1
 
@@ -73,10 +101,10 @@ def ollga_mutation(n, lam, q, f, k, p, x):
             fx_mutated_best_noisy = fy_noisy
             m_0_best, m_1_best = m_0, m_1
 
-    return m_0_best, m_1_best, fitness_evaluations
+    return m_0_best, m_1_best, fitness_evaluations, x_mutated_best
 
 
-def crossover(n, lam, q, f, k, c, x, m_0, m_1):
+def crossover(n, lam, q, f, k, c, x, m_0, m_1, x_mutated):
     if not c:
         c = 1 / lam
     assert 0 <= c <= 1
@@ -85,8 +113,15 @@ def crossover(n, lam, q, f, k, c, x, m_0, m_1):
     fitness_evaluations = 0
 
     for _ in range(lam):
-        y = x - m_1 + np.random.binomial(m_1, 1 - c) + np.random.binomial(m_0, c)
-        assert 0 <= y <= n
+        if is_quick(f):
+            y = x - m_1 + np.random.binomial(m_1, 1 - c) + np.random.binomial(m_0, c)
+            assert 0 <= y <= n
+        else:
+            y = x.copy()
+            for i in range(n):
+                if x[i] != x_mutated[i] and np.random.uniform() < 1 / lam:
+                    y[i] ^= 1
+
         fy_noisy = f(y, n, q, k)
         fitness_evaluations += 1
 
@@ -97,15 +132,24 @@ def crossover(n, lam, q, f, k, c, x, m_0, m_1):
     return y_crossover_best, fy_crossover_best_noisy, fitness_evaluations
 
 
+def not_find_optimum(x, n, f):
+    if is_quick(f):
+        return x != n
+    else:
+        return x.sum() != n
+
+
 def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations):
     n_iters = 0
-    x = np.random.binomial(n, 1 / 2)
-    assert 0 <= x <= n
-    n_iters_max = stop_criterion(n)
+    if is_quick(f):
+        x = np.random.binomial(n, 1 / 2)
+        assert 0 <= x <= n
+    else:
+        x = np.random.randint(0, 2, n)
 
-    while x != n and n_iters < n_iters_max:
+    n_iters_max = stop_criterion(n)
+    while not_find_optimum(x, n, f) and n_iters < n_iters_max:
         y, fy_noisy, fitness_evaluations_actual = algo_fun(n, lam, q, f, k, p, c, x)
-        assert 0 <= y <= n
 
         if f(x, n, q, k) <= fy_noisy:
             x = y
@@ -119,8 +163,8 @@ def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations):
 
 def ollga(n, lam, q, f, k, p, c):
     def algo_fun(n, lam, q, f, k, p, c, x):
-        m_0, m_1, fitness_evaluations_1 = ollga_mutation(n, lam, q, f, k, p, x)
-        y, fy_noisy, fitness_evaluations_2 = crossover(n, lam, q, f, k, c, x, m_0, m_1)
+        m_0, m_1, fitness_evaluations_1, x_mutated = quick_ollga_mutation(n, lam, q, f, k, p, x)
+        y, fy_noisy, fitness_evaluations_2 = crossover(n, lam, q, f, k, c, x, m_0, m_1, x_mutated)
         return y, fy_noisy, fitness_evaluations_1 + fitness_evaluations_2
 
     return algorithm(n, lam, q, algo_fun, f, k, p, c, 2 * lam + 1)
@@ -128,7 +172,7 @@ def ollga(n, lam, q, f, k, p, c):
 
 def lea(n, lam, q, f, k, p, c):
     def algo_fun(n, lam, q, f, k, p, c, x):
-        x_mutated, fx_noisy, fitness_evaluations = lea_mutation(n, lam, q, f, k, p, x)
+        x_mutated, fx_noisy, fitness_evaluations = quick_lea_mutation(n, lam, q, f, k, p, x)
         return x_mutated, fx_noisy, fitness_evaluations
 
     return algorithm(n, lam, q, algo_fun, f, k, p, c, lam + 1)
@@ -136,7 +180,7 @@ def lea(n, lam, q, f, k, p, c):
 
 def tlea(n, lam, q, f, k, p, c):
     def algo_fun(n, lam, q, f, k, p, c, x):
-        x_mutated, fx_noisy, fitness_evaluations = lea_mutation(n, lam, q, f, k, p, x)
+        x_mutated, fx_noisy, fitness_evaluations = quick_lea_mutation(n, lam, q, f, k, p, x)
         return x_mutated, fx_noisy, fitness_evaluations
 
     return algorithm(n, 2 * lam, q, algo_fun, f, k, p, c, 2 * lam + 1)

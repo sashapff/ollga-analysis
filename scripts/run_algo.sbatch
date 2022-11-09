@@ -6,15 +6,22 @@
 #SBATCH --output="slurm_output/"%A.out
 #SBATCH --qos=high_cpu
 
-python3 main.py --n_deg 7 --k 3 --q 0 --algo ollga --lam sqrtn_pow_k_minus_1_div_sqrt_k_pow_k --fitness jump --p sqrt_k_div_n --c sqrt_k_div_n
-python3 main.py --n_deg 7 --k 3 --q 0 --algo lea --lam 1 --fitness jump
-python3 main.py --n_deg 7 --k 3 --q 0 --algo lea --lam logn --fitness jump
-python3 main.py --n_deg 7 --k 3 --q logn_div_n --algo ollga --lam sqrtn_pow_k_minus_1_div_sqrt_k_pow_k --fitness jump --p sqrt_k_div_n --c sqrt_k_div_n
-python3 main.py --n_deg 7 --k 3 --q logn_div_n --algo lea --lam 1  --fitness jump
-python3 main.py --n_deg 7 --k 3 --q logn_div_n --algo lea --lam logn --fitness jump
-python3 main.py --n_deg 7 --k 3 --q 1_div_6e --algo ollga --lam sqrtn_pow_k_minus_1_div_sqrt_k_pow_k --fitness jump --p sqrt_k_div_n --c sqrt_k_div_n
-python3 main.py --n_deg 7 --k 3 --q 1_div_6e --algo lea --lam 1  --fitness jump
-python3 main.py --n_deg 7 --k 3 --q 1_div_6e --algo lea --lam logn --fitness jump
+python3 main.py --n_deg 7 --lam sqrtn --algo lea --q 0 --fitness leading_ones
+python3 main.py --n_deg 7 --lam sqrtn --algo lea --q logn_div_n --fitness leading_ones
+python3 main.py --n_deg 7 --lam sqrtn--algo lea --q 1_div_6e --fitness leading_ones
+python3 main.py --n_deg 7 --lam sqrtn --algo ollga --q 0 --fitness leading_ones
+python3 main.py --n_deg 7 --lam sqrtn --algo ollga --q logn_div_n --fitness leading_ones
+python3 main.py --n_deg 7 --lam sqrtn --algo ollga --q 1_div_6e --fitness leading_ones
+
+#python3 main.py --n_deg 7 --k 3 --q 0 --algo ollga --lam sqrtn_pow_k_minus_1_div_sqrt_k_pow_k --fitness jump --p sqrt_k_div_n --c sqrt_k_div_n
+#python3 main.py --n_deg 7 --k 3 --q 0 --algo lea --lam 1 --fitness jump
+#python3 main.py --n_deg 7 --k 3 --q 0 --algo lea --lam logn --fitness jump
+#python3 main.py --n_deg 7 --k 3 --q logn_div_n --algo ollga --lam sqrtn_pow_k_minus_1_div_sqrt_k_pow_k --fitness jump --p sqrt_k_div_n --c sqrt_k_div_n
+#python3 main.py --n_deg 7 --k 3 --q logn_div_n --algo lea --lam 1  --fitness jump
+#python3 main.py --n_deg 7 --k 3 --q logn_div_n --algo lea --lam logn --fitness jump
+#python3 main.py --n_deg 7 --k 3 --q 1_div_6e --algo ollga --lam sqrtn_pow_k_minus_1_div_sqrt_k_pow_k --fitness jump --p sqrt_k_div_n --c sqrt_k_div_n
+#python3 main.py --n_deg 7 --k 3 --q 1_div_6e --algo lea --lam 1  --fitness jump
+#python3 main.py --n_deg 7 --k 3 --q 1_div_6e --algo lea --lam logn --fitness jump
 
 
 #python3 main.py --n_deg 3 --k 2 --q 0 --algo ollga --lam sqrtn_div_2 --fitness jump --p sqrt_2_div_n --c sqrt_2_div_n

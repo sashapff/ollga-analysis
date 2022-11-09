@@ -1,7 +1,7 @@
 import argparse
 import math
 
-from algorithms import ollga, lea, tlea, onemax, jump
+from algorithms import ollga, lea, tlea, onemax, jump, leading_ones
 
 algo_dict = {
     'ollga': ollga,
@@ -12,11 +12,13 @@ algo_dict = {
 fitness_dict = {
     'onemax': onemax,
     'jump': jump,
+    'leading_ones': leading_ones
 }
 
 fitness_name_dict = {
     'onemax': 'OneMax',
     'jump': 'Jump',
+    'leading_ones': 'LeadingOnes'
 }
 
 algo_tex_dict = {
