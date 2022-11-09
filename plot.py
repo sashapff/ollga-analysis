@@ -48,9 +48,9 @@ if __name__ == '__main__':
     else:
         plt.title(f'{fitness_name} function, k={k}, q={q_tex}')
 
-    plot(algo_name_1, n_deg_from, n_deg_to, lam_name_1, q_name, algo_tex_1, data_path, lam_tex_1, is_same, k, 'black')
-    plot(algo_name_2, n_deg_from, n_deg_to, lam_name_2, q_name, algo_tex_2, data_path, lam_tex_2, is_same, k, 'tab:red')
     plot(algo_name_3, n_deg_from, n_deg_to, lam_name_3, q_name, algo_tex_3, data_path, lam_tex_3, is_same, k, 'darkblue')
+    plot(algo_name_2, n_deg_from, n_deg_to, lam_name_2, q_name, algo_tex_2, data_path, lam_tex_2, is_same, k, 'tab:red')
+    plot(algo_name_1, n_deg_from, n_deg_to, lam_name_1, q_name, algo_tex_1, data_path, lam_tex_1, is_same, k, 'black')
 
     plt.legend()
     plt.xlabel('n, size of individuals')
