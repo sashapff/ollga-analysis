@@ -54,6 +54,8 @@ def option_parse(n, option, lam=None, k=None):
         if k == 2:
             assert abs(math.sqrt(n) / 2 - math.sqrt(n) ** (k - 1) / math.sqrt(k) ** k) < 1e-8
         return math.sqrt(n) ** (k - 1) / math.sqrt(k) ** k
+    if option == 'n_div_2':
+        return n / 2
     if not option:
         return None
     try:
@@ -85,6 +87,8 @@ def option_tex_parse(option):
         return '$\\frac{\sqrt{n}}{2}$'
     if option == 'sqrtn_pow_k_minus_1_div_sqrt_k_pow_k':
         return '$\\frac{\sqrt{n}^{k-1}}{\sqrt{k}^k}$'
+    if option == 'n_div_2':
+        return '$\\frac{n}{2}$'
     return option
 
 
