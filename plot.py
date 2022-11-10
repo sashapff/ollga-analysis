@@ -44,7 +44,7 @@ if __name__ == '__main__':
     is_same = lam_name_1 == lam_name_2 == lam_name_3
 
     if is_same:
-        plt.title(f'{fitness_name} function, $\lambda$={lam_name_1}, q={q_tex}')
+        plt.title(f'{fitness_name} function, $\lambda$={lam_tex_1}, q={q_tex}')
     else:
         plt.title(f'{fitness_name} function, k={k}, q={q_tex}')
 
