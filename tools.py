@@ -66,7 +66,7 @@ def option_parse(n, option, lam=None, k=None):
 
 def option_tex_parse(option):
     if option == 'logn':
-        return '$\log(n)$'
+        return '$\ln n$'
     if option == '1_div_6e':
         return '$\\frac{1}{6e}$'
     if option == 'logn_div_n':
@@ -74,7 +74,7 @@ def option_tex_parse(option):
     if option == 'sqrtn':
         return '$\sqrt{n}$'
     if option == 'logn_div_2':
-        return '$\\frac{\log(n)}{2}$'
+        return '$\\frac{\ln n}{2}$'
     if option == '1_div_n':
         return '$\\frac{1}{n}$'
     if option == 'lambda_div_n':
@@ -89,7 +89,7 @@ def option_tex_parse(option):
         return '$\\frac{\sqrt{n}^{k-1}}{\sqrt{k}^k}$'
     if option == 'n_div_2':
         return '$\\frac{n}{2}$'
-    return option
+    return '$' + str(option) + '$'
 
 
 def args_parse():
@@ -136,7 +136,7 @@ def plots_args_parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('--algo_1', type=str, default='ollga')
     parser.add_argument('--algo_2', type=str, default='lea')
-    parser.add_argument('--algo_3', type=str, default='tlea')
+    parser.add_argument('--algo_3', type=str, default='lea')
     parser.add_argument('--n_deg_from', type=int, default=3)
     parser.add_argument('--n_deg_to', type=int, default=7)
     parser.add_argument('--lam', type=str, default=None)
@@ -148,6 +148,7 @@ def plots_args_parse():
     parser.add_argument('--fitness', type=str, default='onemax')
     parser.add_argument('--data_path', type=str, default='data')
     parser.add_argument('--plots_path', type=str, default='plots')
+    parser.add_argument('--latex_plots_path', type=str, default='latex_plots')
     args = parser.parse_args()
 
     algo_name_1 = args.algo_1
@@ -172,6 +173,7 @@ def plots_args_parse():
     fitness_name = fitness_name_dict[args.fitness]
     data_path = args.data_path + '/' + fitness_name.lower() + '/' + ('k=' + str(k) + '/' if k else '')
     plots_path = args.plots_path + '/' + fitness_name.lower() + '/' + ('k=' + str(k) + '/' if k else '')
+    latex_plots_path = args.latex_plots_path + '/' + fitness_name.lower() + '/' + ('k=' + str(k) + '/' if k else '')
 
     q_tex = option_tex_parse(args.q)
 
@@ -181,4 +183,4 @@ def plots_args_parse():
 
     return algo_name_1, algo_tex_1, algo_name_2, algo_tex_2, algo_name_3, algo_tex_3, n_deg_from, n_deg_to, \
            lam_name_1, lam_tex_1, lam_name_2, lam_tex_2, lam_name_3, lam_tex_3, q_name, q_tex, fitness_name, data_path, \
-           plots_path, k
+           plots_path, latex_plots_path, k
