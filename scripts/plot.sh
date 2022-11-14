@@ -25,16 +25,16 @@ python3 plot.py --k 2 --algo_1 ollga --algo_2 lea --algo_3 lea --lam1 sqrtn_div_
 python3 plot.py --k 2 --algo_1 ollga --algo_2 lea --algo_3 lea --lam1 sqrtn_div_2 --lam2 1 --lam3 logn --q 1_div_6e --fitness jump
 
 
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn --q 1_div_6e
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn --q logn_div_n
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn --q 0
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn --q 1
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn_div_2 --q 1_div_6e
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn_div_2 --q logn_div_n
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn_div_2 --q 0
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn_div_2 --q 1
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam sqrtn --q 1_div_6e
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam sqrtn --q logn_div_n
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam sqrtn --q 0
-#python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam sqrtn --q 1
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn --q 1_div_6e
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn --q logn_div_n
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn --q 0
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn --q 1
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn_div_2 --q 1_div_6e
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn_div_2 --q logn_div_n
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn_div_2 --q 0
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam logn_div_2 --q 1
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam sqrtn --q 1_div_6e
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam sqrtn --q logn_div_n
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam sqrtn --q 0
+python3 plot.py --n_deg_from 5 --n_deg_to 14 --lam sqrtn --q 1
 

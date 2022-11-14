@@ -36,16 +36,16 @@ def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, q_tex, label, data_p
 
             plt.errorbar(n, n_iters, yerr=std, color=color, capsize=3)
 
-    plt.plot(keys, values, label=label, color=color)
+        plt.plot(keys, values, label=label, color=color)
 
     latex_output += '};\n'
     if algo_name == 'ollga':
         algo_tex_name = '\ollga'
-    elif algo_name == 'lea' and lam_name == 1:
+    elif algo_name == 'lea' and lam_name == '1':
         algo_tex_name = '\oea'
     else:
         algo_tex_name = '\oplea'
-    latex_output += '\t\t\\addlegendentry{$' + algo_tex_name + (', \\lambda=' + lam_tex[1:-1] if algo_tex_name != '\oea' else '') + (', k=' + str(k) if k else '') + '$' + '};\n'
+    latex_output += '\t\t\\addlegendentry{' + algo_tex_name + (', \\lambda=$' + lam_tex[1:-1] if algo_tex_name != '\oea' else '') + (', k=' + str(k) if k else '') + '$' + '};\n'
 
     return latex_output
 
