@@ -18,10 +18,11 @@ def plot(algo_name, lam_name, q_name, data_path, n_deg_from, n_deg_to):
             n = 1 << n_deg
             lam = option_parse(n, lam_name, k=3)
             data = data[data >= 0]
-            n_iters = data.mean()
-            std = data.std()
+            if len(data) > 0 and len(data) == len(np.loadtxt(file_name)):
+                n_iters = data.mean()
+                std = data.std()
 
-            latex_output += f'({n},{n_iters})+-(0,{std})'
+                latex_output += f'({n},{n_iters})+-(0,{std})'
 
     latex_output += '};\n'
     latex_output += '\t\t' + (
@@ -47,7 +48,7 @@ if __name__ == '__main__':
     if not os.path.exists(latex_plots_path):
         os.makedirs(latex_plots_path)
 
-    for q_name in ['0', 'logn_div_n', '1_div_6e']:
+    for q_name in ['0', 'logn_div_n', '1_div_6e', '1']:
         q_tex = option_tex_parse(q_name)
         name = f'q={q_name}'
 
@@ -58,8 +59,8 @@ if __name__ == '__main__':
         latex_output_5 = plot('lea', '1', q_name, data_path, n_deg_from, n_deg_to)
 
         with open(latex_plots_path + name + '.tex', 'w') as file:
-            file.write(latex_output_1)
             file.write(latex_output_2)
-            file.write(latex_output_5)
-            file.write(latex_output_3)
             file.write(latex_output_4)
+            file.write(latex_output_5)
+            file.write(latex_output_1)
+            file.write(latex_output_3)

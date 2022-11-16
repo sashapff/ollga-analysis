@@ -1,14 +1,20 @@
 #! /bin/bash
-#SBATCH --job-name="jump"
+#SBATCH --job-name="jump4"
 #SBATCH --cpus-per-task=10
 #SBATCH --time=72:00:00
 #SBATCH --mem=2G
 #SBATCH --output="slurm_output/"%A.out
 
 
+python3 main.py --n_deg 7 --k 3 --q 1 --algo ollga --lam sqrtn_pow_k_minus_1_div_sqrt_k_pow_k --fitness jump --p sqrt_k_div_n --c sqrt_k_div_n
+python3 main.py --n_deg 7 --k 3 --q 1 --algo ollga --lam logn --fitness jump --p sqrt_k_div_n --c sqrt_k_div_n
+python3 main.py --n_deg 7 --k 3 --q 1 --algo lea --lam sqrtn_pow_k_minus_1_div_sqrt_k_pow_k --fitness jump
+python3 main.py --n_deg 7 --k 3 --q 1 --algo lea --lam logn --fitness jump
+python3 main.py --n_deg 7 --k 3 --q 1 --algo lea --lam 1 --fitness jump
 
-python3 main.py --n_deg 6 --lam n_div_2 --q 1 --algo ollga --fitness leading_ones
-python3 main.py --n_deg 6 --lam n_div_2 --q 1 --algo lea --fitness leading_ones
+
+#python3 main.py --n_deg 6 --lam n_div_2 --q 1 --algo ollga --fitness leading_ones
+#python3 main.py --n_deg 6 --lam n_div_2 --q 1 --algo lea --fitness leading_ones
 
 #python3 main.py --n_deg 9 --lam logn --algo lea --q 0 --fitness leading_ones
 #python3 main.py --n_deg 9 --lam logn --algo ollga --q 0 --fitness leading_ones

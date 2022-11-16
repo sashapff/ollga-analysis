@@ -61,6 +61,7 @@ def option_parse(n, option, lam=None, k=None):
     try:
         return int(option)
     except:
+        print(option)
         print('no!')
 
 

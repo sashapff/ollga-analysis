@@ -1,8 +1,8 @@
 import numpy as np
 
 
-def stop_criterion(n):
-    return n ** 4
+def stop_criterion(n, filename=None):
+    return n ** 3
 
 
 def is_quick(f):
@@ -139,7 +139,7 @@ def not_find_optimum(x, n, f):
         return x.sum() != n
 
 
-def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations):
+def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations, filename):
     n_iters = 0
     if is_quick(f):
         x = np.random.binomial(n, 1 / 2)
@@ -147,8 +147,8 @@ def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations):
     else:
         x = np.random.randint(0, 2, n)
 
-    n_iters_max = stop_criterion(n)
-    while not_find_optimum(x, n, f) and n_iters < n_iters_max:
+    n_iters_max = stop_criterion(n, filename)
+    while not_find_optimum(x, n, f):
         y, fy_noisy, fitness_evaluations_actual = algo_fun(n, lam, q, f, k, p, c, x)
 
         if f(x, n, q, k) <= fy_noisy:
@@ -161,26 +161,26 @@ def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations):
     return n_iters, fitness_evaluations
 
 
-def ollga(n, lam, q, f, k, p, c):
+def ollga(n, lam, q, f, k, p, c, filename):
     def algo_fun(n, lam, q, f, k, p, c, x):
         m_0, m_1, fitness_evaluations_1, x_mutated = quick_ollga_mutation(n, lam, q, f, k, p, x)
         y, fy_noisy, fitness_evaluations_2 = crossover(n, lam, q, f, k, c, x, m_0, m_1, x_mutated)
         return y, fy_noisy, fitness_evaluations_1 + fitness_evaluations_2
 
-    return algorithm(n, lam, q, algo_fun, f, k, p, c, 2 * lam + 1)
+    return algorithm(n, lam, q, algo_fun, f, k, p, c, 2 * lam + 1, filename)
 
 
-def lea(n, lam, q, f, k, p, c):
+def lea(n, lam, q, f, k, p, c, filename):
     def algo_fun(n, lam, q, f, k, p, c, x):
         x_mutated, fx_noisy, fitness_evaluations = quick_lea_mutation(n, lam, q, f, k, p, x)
         return x_mutated, fx_noisy, fitness_evaluations
 
-    return algorithm(n, lam, q, algo_fun, f, k, p, c, lam + 1)
+    return algorithm(n, lam, q, algo_fun, f, k, p, c, lam + 1, filename)
 
 
-def tlea(n, lam, q, f, k, p, c):
+def tlea(n, lam, q, f, k, p, c, filename):
     def algo_fun(n, lam, q, f, k, p, c, x):
         x_mutated, fx_noisy, fitness_evaluations = quick_lea_mutation(n, lam, q, f, k, p, x)
         return x_mutated, fx_noisy, fitness_evaluations
 
-    return algorithm(n, 2 * lam, q, algo_fun, f, k, p, c, 2 * lam + 1)
+    return algorithm(n, 2 * lam, q, algo_fun, f, k, p, c, 2 * lam + 1, filename)

@@ -23,14 +23,15 @@ def plot(algo_name, n_deg_from, n_deg_to, q_name, data_path, linestyle):
                 n = 1 << n_deg
                 lam = option_parse(n, lam_name)
                 data = data[data >= 0] / n ** 2
-                n_iters = data.mean()
-                keys.append(n)
-                values.append(n_iters)
-                std = data.std()
+                if len(data) > 0:
+                    n_iters = data.mean()
+                    keys.append(n)
+                    values.append(n_iters)
+                    std = data.std()
 
-                latex_output += f'({n},{n_iters})+-(0,{std})'
+                    latex_output += f'({n},{n_iters})+-(0,{std})'
 
-                plt.errorbar(n, n_iters, yerr=std, capsize=3, color=color)
+                    plt.errorbar(n, n_iters, yerr=std, capsize=3, color=color)
 
         plt.plot(keys, values, label=algo_tex_name + ', $\lambda$=' + lam_tex, color=color, linestyle=linestyle)
 
@@ -58,7 +59,7 @@ if __name__ == '__main__':
     if not os.path.exists(latex_plots_path):
         os.makedirs(latex_plots_path)
 
-    for q_name in ['0', 'logn_div_n', '1_div_6e']:
+    for q_name in ['0', 'logn_div_n', '1_div_6e', '1']:
         plt.clf()
         q_tex = option_tex_parse(q_name)
         name = f'q={q_name}'
