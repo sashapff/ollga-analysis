@@ -10,7 +10,7 @@ def plot(algo_name, n_deg_from, n_deg_to, q_name, data_path, linestyle):
     algo_tex_name = algo_tex_dict[algo_name]
     latex_output = ''
     algo_latex_code = '\ollga' if algo_name == 'ollga' else '\oplea'
-    for lam_name, color in zip(['logn_div_2', 'logn', 'n_div_2', 'sqrtn'], ['black', 'red', 'blue', 'green']):
+    for lam_name, color in zip(['logn_div_2', 'logn', 'sqrtn', 'n_div_2'], ['black', 'red', 'blue', 'green']):
         lam_tex = option_tex_parse(lam_name)
         keys = []
         values = []

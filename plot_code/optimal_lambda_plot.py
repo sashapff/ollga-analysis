@@ -16,12 +16,13 @@ def plot(algo_name, algo_tex, algo_den_name, q_name, q_tex, q_den_name, data_pat
         for line in lines:
             tokens = line.split()
             lam = int(tokens[0].split('=')[1])
-            data = np.array([int(x) for x in tokens[1:]])
-            data *= (2 * int(lam) + 1 if algo_name == 'ollga' else int(lam) + 1)
-            n_iters = data[data >= 0].mean()
-            std = data.std()
+            if lam > 1 and not (algo_name == 'olga' and lam < 4 and q_name == '1_div_6e'):
+                data = np.array([int(x) for x in tokens[1:]])
+                data *= (2 * int(lam) + 1) if algo_name == 'ollga' else (int(lam) + 1)
+                n_iters = data[data >= 0].mean()
+                std = data[data >= 0].std()
 
-            latex_output += f'({lam},{n_iters})+-(0,{std})'
+                latex_output += f'({lam},{n_iters})+-(0,{std})'
 
     latex_output += '};\n'
     latex_output += '\t\t' + ('% ' if q_name != '0' else '') + '\\addlegendentry{' + algo_tex + '};\n'

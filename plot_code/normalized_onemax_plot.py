@@ -59,7 +59,7 @@ if __name__ == '__main__':
     if not os.path.exists(latex_plots_path):
         os.makedirs(latex_plots_path)
 
-    for q_name in ['0', 'logn_div_n', '1_div_6e']:
+    for q_name in ['0', 'logn_div_n', '1_div_6e', '1']:
         plt.clf()
         q_tex = option_tex_parse(q_name)
         name = f'q={q_name}'
