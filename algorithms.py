@@ -204,7 +204,6 @@ def clea(n, lam, q, f, k, p, c, filename):
         y, fy_noisy, fitness_evaluations_actual = algo_fun(n, lam, q, f, k, p, c, x)
 
         x = y
-        fitness_evaluations_actual += 1
 
         n_iters += 1
         assert fitness_evaluations == fitness_evaluations_actual
