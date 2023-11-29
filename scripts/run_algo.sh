@@ -1,5 +1,5 @@
 #! /bin/bash
-#SBATCH --job-name="lea"
+#SBATCH --job-name="lea13"
 #SBATCH --cpus-per-task=10
 #SBATCH --time=72:00:00
 #SBATCH --mem=2G
@@ -70,7 +70,7 @@
 #python3 main.py --algo tlea --n_deg 11 --lam sqrtn --q 1
 
 
-python3 main.py --algo lea --n_deg 12 --lam 14_logn --q 1
+python3 main.py --algo lea --n_deg 13 --lam 14_logn --q 1
 
 
 
