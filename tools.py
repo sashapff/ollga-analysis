@@ -56,6 +56,8 @@ def option_parse(n, option, lam=None, k=None):
         return math.sqrt(n) ** (k - 1) / math.sqrt(k) ** k
     if option == 'n_div_2':
         return n / 2
+    if option == '14_logn':
+        return 14 * math.log(n)
     if not option:
         return None
     try:

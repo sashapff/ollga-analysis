@@ -1,5 +1,5 @@
 #! /bin/bash
-#SBATCH --job-name="jump4"
+#SBATCH --job-name="lea6"
 #SBATCH --cpus-per-task=10
 #SBATCH --time=72:00:00
 #SBATCH --mem=2G
@@ -70,7 +70,7 @@
 #python3 main.py --algo tlea --n_deg 11 --lam sqrtn --q 1
 
 
-python3 main.py --algo ollga --n_deg 13 --lam logn_div_2 --q 1_div_6e --fitness onemax --runs 2
+python3 main.py --algo lea --n_deg 6 --lam 14_logn --q 1
 
 
 
