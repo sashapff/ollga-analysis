@@ -184,3 +184,29 @@ def tlea(n, lam, q, f, k, p, c, filename):
         return x_mutated, fx_noisy, fitness_evaluations
 
     return algorithm(n, 2 * lam, q, algo_fun, f, k, p, c, 2 * lam + 1, filename)
+
+
+def clea(n, lam, q, f, k, p, c, filename):
+    fitness_evaluations = lam
+    def algo_fun(n, lam, q, f, k, p, c, x):
+        x_mutated, fx_noisy, fitness_evaluations = quick_lea_mutation(n, lam, q, f, k, p, x)
+        return x_mutated, fx_noisy, fitness_evaluations
+    
+    n_iters = 0
+    if is_quick(f):
+        x = np.random.binomial(n, 1 / 2)
+        assert 0 <= x <= n
+    else:
+        x = np.random.randint(0, 2, n)
+
+    n_iters_max = stop_criterion(n, filename)
+    while not_find_optimum(x, n, f):
+        y, fy_noisy, fitness_evaluations_actual = algo_fun(n, lam, q, f, k, p, c, x)
+
+        x = y
+        fitness_evaluations_actual += 1
+
+        n_iters += 1
+        assert fitness_evaluations == fitness_evaluations_actual
+
+    return n_iters, fitness_evaluations
