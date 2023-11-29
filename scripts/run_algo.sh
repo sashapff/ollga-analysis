@@ -70,7 +70,7 @@
 #python3 main.py --algo tlea --n_deg 11 --lam sqrtn --q 1
 
 
-python3 main.py --algo lea --n_deg 11 --lam 14_logn --q 1
+python3 main.py --algo lea --n_deg 12 --lam 14_logn --q 1
 
 
 
