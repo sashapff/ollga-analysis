@@ -1,5 +1,5 @@
 #! /bin/bash
-#SBATCH --job-name="lea6"
+#SBATCH --job-name="lea"
 #SBATCH --cpus-per-task=10
 #SBATCH --time=72:00:00
 #SBATCH --mem=2G
