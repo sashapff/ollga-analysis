@@ -2,7 +2,7 @@ import numpy as np
 
 
 def stop_criterion(n, filename=None):
-    return n ** 4
+    return n ** 10
 
 
 def is_quick(f):
