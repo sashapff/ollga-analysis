@@ -140,6 +140,7 @@ def not_find_optimum(x, n, f):
 
 
 def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations, filename):
+    print('START')
     n_iters = 0
     if is_quick(f):
         x = np.random.binomial(n, 1 / 2)
