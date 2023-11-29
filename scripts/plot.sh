@@ -1,4 +1,9 @@
 #!/bin/bash -i
+#SBATCH --job-name="plot"
+#SBATCH --cpus-per-task=1
+#SBATCH --time=72:00:00
+#SBATCH --mem=2G
+#SBATCH --output="output.out"
 
 python3 plot.py --algo_1 lea --algo_2 clea --lam 14_logn --q 1 --n_deg_from 6 --n_deg_from 14
 
