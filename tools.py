@@ -1,12 +1,13 @@
 import argparse
 import math
 
-from algorithms import ollga, lea, tlea, onemax, jump, leading_ones
+from algorithms import ollga, lea, tlea, clea, onemax, jump, leading_ones
 
 algo_dict = {
     'ollga': ollga,
     'lea': lea,
-    'tlea': tlea
+    'tlea': tlea,
+    'clea': clea
 }
 
 fitness_dict = {
