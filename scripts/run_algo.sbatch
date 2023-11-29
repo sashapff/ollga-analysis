@@ -3,6 +3,7 @@
 #SBATCH --cpus-per-task=10
 #SBATCH --time=72:00:00
 #SBATCH --mem=2G
+#SBATCH --output="slurm_output/"%A.out
 
 
 
