@@ -35,6 +35,7 @@ def run(algo, n, lam, q, f, k, p, c, n_threads, n_runs, file, filename):
 
         for dist in runtime_dist:
             for n_iters in dist:
+                print(n_iters)
                 file.write(f'{n_iters}\n')
 
 
