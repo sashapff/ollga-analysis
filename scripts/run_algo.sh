@@ -3,7 +3,7 @@
 #SBATCH --cpus-per-task=10
 #SBATCH --time=72:00:00
 #SBATCH --mem=2G
-#SBATCH --output=output.out
+#SBATCH --output="output.out"
 
 
 
@@ -70,7 +70,7 @@
 #python3 main.py --algo tlea --n_deg 11 --lam sqrtn --q 1
 
 
-python3 main.py --algo lea --n_deg 9 --lam 14_logn --q 1
+python3 main.py --algo lea --n_deg 10 --lam 14_logn --q 1
 
 
 
