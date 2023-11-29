@@ -26,6 +26,7 @@ algo_tex_dict = {
     'ollga': '$(1+(\lambda, \lambda))$ GA',
     'lea': '$(1+\lambda)$ EA',
     'tlea': '$(1+2\lambda)$ EA',
+    'clea': '$(1,\lambda)$ EA',
 }
 
 
@@ -93,6 +94,8 @@ def option_tex_parse(option):
         return '$\\frac{\sqrt{n}^{k-1}}{\sqrt{k}^k}$'
     if option == 'n_div_2':
         return '$\\frac{n}{2}$'
+    if option == '14_logn':
+        return '$14 \ln n$'
     return '$' + str(option) + '$'
 
 
@@ -140,7 +143,7 @@ def plots_args_parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('--algo_1', type=str, default='ollga')
     parser.add_argument('--algo_2', type=str, default='lea')
-    parser.add_argument('--algo_3', type=str, default='lea')
+    parser.add_argument('--algo_3', type=str, default=None)
     parser.add_argument('--n_deg_from', type=int, default=3)
     parser.add_argument('--n_deg_to', type=int, default=7)
     parser.add_argument('--lam', type=str, default=None)
@@ -183,7 +186,10 @@ def plots_args_parse():
 
     algo_tex_1 = algo_tex_dict[algo_name_1]
     algo_tex_2 = algo_tex_dict[algo_name_2]
-    algo_tex_3 = algo_tex_dict[algo_name_3]
+    if algo_name_3:
+        algo_tex_3 = algo_tex_dict[algo_name_3]
+    else:
+        algo_tex_3 = None
 
     return algo_name_1, algo_tex_1, algo_name_2, algo_tex_2, algo_name_3, algo_tex_3, n_deg_from, n_deg_to, \
            lam_name_1, lam_tex_1, lam_name_2, lam_tex_2, lam_name_3, lam_tex_3, q_name, q_tex, fitness_name, data_path, \

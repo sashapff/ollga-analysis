@@ -63,24 +63,33 @@ if __name__ == '__main__':
 
     is_same = lam_name_1 == lam_name_2 == lam_name_3
 
-    if is_same:
-        plt.title(f'{fitness_name} function, $\lambda$={lam_tex_1}, q={q_tex}')
-        name = f'{algo_name_1}_{algo_name_2}_{algo_name_3}: lam={lam_name_1}, q={q_name}'
+    if algo_name_3:
+        if is_same:
+            plt.title(f'{fitness_name} function, $\lambda$={lam_tex_1}, q={q_tex}')
+            name = f'{algo_name_1}_{algo_name_2}_{algo_name_3}: lam={lam_name_1}, q={q_name}'
+        else:
+            plt.title(f'{fitness_name} function, k={k}, q={q_tex}')
+            name = f'{algo_name_1}_{algo_name_2}_{algo_name_3}: lam1={lam_name_1}, lam2={lam_name_2}, lam3={lam_name_3}, q={q_name}'
     else:
-        plt.title(f'{fitness_name} function, k={k}, q={q_tex}')
-        name = f'{algo_name_1}_{algo_name_2}_{algo_name_3}: lam1={lam_name_1}, lam2={lam_name_2}, lam3={lam_name_3}, q={q_name}'
+        if is_same:
+            plt.title(f'{fitness_name} function, $\lambda$={lam_tex_1}, q={q_tex}')
+            name = f'{algo_name_1}_{algo_name_2}: lam={lam_name_1}, q={q_name}'
+        else:
+            plt.title(f'{fitness_name} function, k={k}, q={q_tex}')
+            name = f'{algo_name_1}_{algo_name_2}: lam1={lam_name_1}, lam2={lam_name_2}, q={q_name}'
+     
     file_name = name + '.png'
 
     latex_output_1 = plot(algo_name_1, n_deg_from, n_deg_to, lam_name_1, q_name, q_tex, algo_tex_1, data_path, lam_tex_1, is_same, k, 'black')
     latex_output_2 = plot(algo_name_2, n_deg_from, n_deg_to, lam_name_2, q_name, q_tex, algo_tex_2, data_path, lam_tex_2, is_same, k, 'tab:red')
-    if lam_name_2 != lam_name_3 or algo_name_2 != algo_name_3:
+    if algo_name_3:
         print('here')
         latex_output_3 = plot(algo_name_3, n_deg_from, n_deg_to, lam_name_3, q_name, q_tex, algo_tex_3, data_path, lam_tex_3, is_same, k, 'darkblue')
 
     with open(latex_plots_path + name + '.tex', 'w') as file:
         file.write(latex_output_1)
         file.write(latex_output_2)
-        if lam_name_2 != lam_name_3 or algo_name_2 != algo_name_3:
+        if algo_name_3:
             file.write(latex_output_3)
 
     plt.legend()
