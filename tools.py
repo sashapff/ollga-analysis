@@ -43,6 +43,8 @@ def option_parse(n, option, lam=None, k=None):
         return math.log(n) / 2
     if option == '1_div_n':
         return 1 / n
+    if option == '10_div_n':
+        return 10 / n
     if option == 'lambda_div_n':
         return lam / n
     if option == '1_div_lambda':
@@ -82,6 +84,8 @@ def option_tex_parse(option):
         return '$\\frac{\ln n}{2}$'
     if option == '1_div_n':
         return '$\\frac{1}{n}$'
+    if option == '10_div_n':
+        return '$\\frac{10}{n}$'
     if option == 'lambda_div_n':
         return '$\\frac{\lambda}{n}$'
     if option == '1_div_lambda':
@@ -173,6 +177,11 @@ def plots_args_parse():
         lam_tex_1 = option_tex_parse(args.lam1)
         lam_tex_2 = option_tex_parse(args.lam2)
         lam_tex_3 = option_tex_parse(args.lam3)
+    elif args.lam1 and args.lam2:
+        lam_name_1 = args.lam1
+        lam_name_2 = args.lam2
+        lam_tex_1 = option_tex_parse(args.lam1)
+        lam_tex_2 = option_tex_parse(args.lam2)
     else:
         raise RuntimeError('Specify lambdas!')
     q_name = args.q
@@ -190,6 +199,8 @@ def plots_args_parse():
         algo_tex_3 = algo_tex_dict[algo_name_3]
     else:
         algo_tex_3 = None
+        lam_name_3 = None
+        lam_tex_3 = None
 
     return algo_name_1, algo_tex_1, algo_name_2, algo_tex_2, algo_name_3, algo_tex_3, n_deg_from, n_deg_to, \
            lam_name_1, lam_tex_1, lam_name_2, lam_tex_2, lam_name_3, lam_tex_3, q_name, q_tex, fitness_name, data_path, \
