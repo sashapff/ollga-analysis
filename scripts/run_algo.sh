@@ -5,6 +5,7 @@
 #SBATCH --mem=2G
 #SBATCH --output="output.out"
 
+python3 main.py --algo lea --n_deg 6 --lam logn --q 0.01
 python3 main.py --algo lea --n_deg 7 --lam logn --q 0.01
 python3 main.py --algo lea --n_deg 8 --lam logn --q 0.01
 python3 main.py --algo lea --n_deg 9 --lam logn --q 0.01
