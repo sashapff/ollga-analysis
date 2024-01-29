@@ -5,7 +5,7 @@
 #SBATCH --mem=2G
 #SBATCH --output="output.out"
 
-python3 main.py --algo lea --n_deg 6 --lam 1 --q 1_div_n
+python3 main.py --algo lea --n_deg 7 --lam 1 --q 1_div_n
 
 
 #python3 main.py --n_deg 7 --k 3 --q 1 --algo ollga --lam sqrtn_pow_k_minus_1_div_sqrt_k_pow_k --fitness jump --p sqrt_k_div_n --c sqrt_k_div_n
