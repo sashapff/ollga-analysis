@@ -22,7 +22,8 @@ def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, q_tex, label, data_p
         if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
             data = np.loadtxt(file_name)
             n = 1 << n_deg
-            coeff = n * np.log(n)
+            # coeff = n * np.log(n)
+            coeff = 1
             data = data / coeff
 
             lam = option_parse(n, lam_name, k=k)
@@ -79,7 +80,7 @@ if __name__ == '__main__':
             plt.title(f'{fitness_name} function, $\lambda$={lam_tex_1}, q={q_tex}')
             name = f'{algo_name_1}_{algo_name_2}: lam={lam_name_1}, q={q_name}'
         else:
-            plt.title(f'{fitness_name} function, k={k}, q={q_tex}')
+            plt.title(f'{fitness_name} function, q={q_tex}')
             name = f'{algo_name_1}_{algo_name_2}: lam1={lam_name_1}, lam2={lam_name_2}, q={q_name}'
      
     file_name = name + '.png'
@@ -99,7 +100,7 @@ if __name__ == '__main__':
     plt.legend()
     plt.xlabel('n, size of individuals')
     plt.ylabel('number of noisy fitness evaluations')
-    # plt.yscale('log')
+    plt.yscale('log')
     plt.xlim((2 ** n_deg_from - (2 ** n_deg_from) / 4, 2 ** n_deg_to + (2 ** n_deg_to) / 4))
     plt.xscale('log', base=2)
 
