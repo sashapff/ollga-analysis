@@ -5,7 +5,7 @@
 #SBATCH --mem=2G
 #SBATCH --output="output.out"
 
-python3 plot.py --algo_1 lea --algo_2 clea --lam 14_logn --q 1 --n_deg_from 6 --n_deg_to 14
+python3 plot.py --algo_1 lea --algo_2 lea --lam1 logn --lam2 1 --q 1_div_n --n_deg_from 6 --n_deg_to 14
 
 # python3 plot.py --algo_1 ollga --algo_2 lea --algo_3 lea --lam logn --q 0 --fitness leading_ones --n_deg_to 8
 # python3 plot.py --algo_1 ollga --algo_2 lea --algo_3 lea --lam logn --q logn_div_n --fitness leading_ones --n_deg_to 8
