@@ -16,11 +16,15 @@ def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, q_tex, label, data_p
     latex_output += '\t\t\\addplot plot [error bars/.cd, y dir=both, y explicit] coordinates\n'
     latex_output += '\t\t{'
 
+
     for n_deg in range(n_deg_from, n_deg_to + 1):
         file_name = data_path + f'{algo_name}: n_deg={n_deg}, lam={lam_name}, q={q_name}.txt'
         if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
             data = np.loadtxt(file_name)
             n = 1 << n_deg
+            coeff = n * np.log(n)
+            data = data / coeff
+
             lam = option_parse(n, lam_name, k=k)
             if algo_name == 'lea':
                 assert len(data[data >= stop_criterion(n) * (lam + 1)]) == 0
@@ -36,7 +40,7 @@ def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, q_tex, label, data_p
 
             plt.errorbar(n, n_iters, yerr=std, color=color, capsize=3)
 
-        plt.plot(keys, values, label=label, color=color)
+    plt.plot(keys, values, label=label, color=color)
 
     latex_output += '};\n'
     if algo_name == 'ollga':
@@ -95,7 +99,7 @@ if __name__ == '__main__':
     plt.legend()
     plt.xlabel('n, size of individuals')
     plt.ylabel('number of noisy fitness evaluations')
-    plt.yscale('log')
+    # plt.yscale('log')
     plt.xlim((2 ** n_deg_from - (2 ** n_deg_from) / 4, 2 ** n_deg_to + (2 ** n_deg_to) / 4))
     plt.xscale('log', base=2)
 

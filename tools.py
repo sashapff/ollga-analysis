@@ -95,7 +95,7 @@ def option_tex_parse(option):
     if option == 'n_div_2':
         return '$\\frac{n}{2}$'
     if option == '14_logn':
-        return '$14 \ln n$'
+        return '$14 \cdot \ln n$'
     return '$' + str(option) + '$'
 
 
