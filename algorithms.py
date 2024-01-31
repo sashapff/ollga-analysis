@@ -166,7 +166,10 @@ def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations, filename, re
         if reevaluate:
             assert fitness_evaluations == fitness_evaluations_actual
 
-    return n_iters, fitness_evaluations_actual
+    if reevaluate:
+        return n_iters, fitness_evaluations
+    else:
+        return n_iters, fitness_evaluations - 1
 
 
 def ollga(n, lam, q, f, k, p, c, filename):
