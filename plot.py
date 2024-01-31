@@ -22,8 +22,8 @@ def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, q_tex, label, data_p
         if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
             data = np.loadtxt(file_name)
             n = 1 << n_deg
-            coeff = n * np.log(n)
-            # coeff = 1
+            # coeff = n * np.log(n)
+            coeff = 1
             data = data / coeff
 
             lam = option_parse(n, lam_name, k=k)
@@ -48,9 +48,13 @@ def plot(algo_name, n_deg_from, n_deg_to, lam_name, q_name, q_tex, label, data_p
         algo_tex_name = '\ollga'
     elif algo_name == 'lea' and lam_name == '1':
         algo_tex_name = '\oea'
-    else:
+    elif algo_name == 'lea':
         algo_tex_name = '\oplea'
-    latex_output += '\t\t\\addlegendentry{' + algo_tex_name + (', \\lambda=$' + lam_tex[1:-1] if algo_tex_name != '\oea' else '') + (', k=' + str(k) if k else '') + '$' + '};\n'
+    elif algo_name == 'clea':
+        algo_tex_name = '\oclea'
+    else:
+        print('Could not parse algorithm!!')
+    latex_output += '\t\t\\addlegendentry{' + algo_tex_name + ((', $\\lambda=' + lam_tex[1:-1]) if algo_tex_name != '\oea' else '') + (', k=' + str(k) if k else '') + ('$' if algo_tex_name != '\oea' else '') + '};\n'
 
     return latex_output
 
@@ -100,7 +104,7 @@ if __name__ == '__main__':
     plt.legend()
     plt.xlabel('n, size of individuals')
     plt.ylabel('number of noisy fitness evaluations')
-    # plt.yscale('log')
+    plt.yscale('log')
     plt.xlim((2 ** n_deg_from - (2 ** n_deg_from) / 4, 2 ** n_deg_to + (2 ** n_deg_to) / 4))
     plt.xscale('log', base=2)
 

@@ -139,7 +139,7 @@ def not_find_optimum(x, n, f):
         return x.sum() != n
 
 
-def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations, filename, reevaluate=True):
+def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations, filename, reevaluate=False):
     n_iters = 0
     if is_quick(f):
         x = np.random.binomial(n, 1 / 2)
@@ -155,14 +155,16 @@ def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations, filename, re
         if reevaluate:
             if f(x, n, q, k) <= fy_noisy:
                 x = y
+            fitness_evaluations_actual += 1
         else:
             if fx_noisy <= fy_noisy:
                 x = y
                 fx_noisy = fy_noisy
-        fitness_evaluations_actual += 1
+
 
         n_iters += 1
-        assert fitness_evaluations == fitness_evaluations_actual
+        if reevaluate:
+            assert fitness_evaluations == fitness_evaluations_actual
 
     return n_iters, fitness_evaluations
 
