@@ -165,6 +165,8 @@ def algorithm(n, lam, q, algo_fun, f, k, p, c, fitness_evaluations, filename, re
         n_iters += 1
         if reevaluate:
             assert fitness_evaluations == fitness_evaluations_actual
+        else:
+            assert fitness_evaluations - 1 == fitness_evaluations_actual
 
     if reevaluate:
         return n_iters, fitness_evaluations
